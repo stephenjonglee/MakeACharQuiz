@@ -13,78 +13,35 @@ def home_page():
 @app.route('/question_form.html', methods = ['GET', 'POST'])
 def question_form():
     if request.method == 'POST':
+        #Parse form data    
+        question = request.form['question'] + " | "
+        optionA = request.form['optionA']
+        optionB = request.form['optionB']
+        optionC = request.form['optionC']
+        optionD = request.form['optionD']
+
+        optArray = optionA + ", " + optionB + ", " + optionC + ", " + optionD + " | "
+
+        with sqlite3.connect('quiz.db') as con:
+            try:
+                cur = con.cursor()
+
+                # update last row
+                sql = ''' UPDATE quiz 
+                SET qArray = qArray || ?, optionArray = optionArray || ? 
+                WHERE quizId = (SELECT MAX(quizId) FROM quiz)'''
+                cur.execute(sql, (question, optArray))
+                con.commit()
+            except:
+                con.rollback()
+        con.close()
+
         # if the next question button is clicked
         if request.form['submit_btn'] == 'nxt':
-            #Parse form data    
-            question = request.form['question']
-            optionA = request.form['optionA']
-            optionB = request.form['optionB']
-            optionC = request.form['optionC']
-            optionD = request.form['optionD']
-
-            optArray = optionA + ", " + optionB + ", " + optionC + ", " + optionD
-
-            with sqlite3.connect('quiz.db') as con:
-                try:
-                    cur = con.cursor()
-                    # retrieving data from last row
-                    sql = ''' SELECT qArray FROM quiz ORDER BY quizId DESC LIMIT 1 '''
-                    qArray = cur.execute(sql)
-                    sql = ''' SELECT optionArray FROM quiz ORDER BY quizId DESC LIMIT 1 '''
-                    optionArray = cur.execute(sql)
-
-                    # add question and options to arrays
-                    qArray = qArray + ", " + question
-                    optionArray = optionArray + ", " + optArray
-
-                    # update last row
-                    sql = ''' UPDATE quiz
-                        SET qArray = ?,
-                            optionArray = ?
-                        WHERE quizId = (SELECT MAX(quizID) FROM quiz)'''
-                    cur.execute(sql, (qArray, optionArray))
-                    con.commit()
-                except:
-                    con.rollback()
-            con.close()
-
             return redirect(url_for("question_form"))
         
         # if the submit button is clicked
         elif request.form['submit_btn'] == 'done':
-            #Parse form data    
-            question = request.form['question']
-            optionA = request.form['optionA']
-            optionB = request.form['optionB']
-            optionC = request.form['optionC']
-            optionD = request.form['optionD']
-
-            optionArray = optionA + ", " + optionB + ", " + optionC + ", " + optionD
-
-            with sqlite3.connect('quiz.db') as con:
-                try:
-                    cur = con.cursor()
-                    # retrieving data from last row
-                    sql = ''' SELECT qArray FROM quiz ORDER BY quizId DESC LIMIT 1 '''
-                    qArray = cur.execute(sql)
-                    sql = ''' SELECT optionArray FROM quiz ORDER BY quizId DESC LIMIT 1 '''
-                    optionArray = cur.execute(sql)
-
-                    # add question and options to arrays
-                    qArray = qArray + ", " + question
-                    optionArray = optionArray + ", " + optArray
-
-                    # update last row
-                    sql = ''' UPDATE quiz
-                        SET qArray = ?,
-                            optionArray = ?
-                        WHERE quizId = (SELECT MAX(quizID) FROM quiz)'''
-                    cur.execute(sql, (qArray, optionArray))
-                    con.commit()
-                except:
-                    con.rollback()
-            con.close()
-
             return redirect(url_for("home_page"))    
     
     return render_template("question_form.html")
@@ -101,15 +58,12 @@ def quiz_form():
         charD = request.form['charD']
 
         charArray = charA + ', ' + charB + ', ' + charC + ', ' + charD
-        
-        qArray = ''
-        optionArray = ''
 
         with sqlite3.connect('quiz.db') as con:
             cur = con.cursor()
-            sql = ''' INSERT INTO quiz (title, charArray, qArray, optionArray)
-                VALUES (?, ?, ?, ?)'''
-            cur.execute(sql, (title, charArray, qArray, optionArray))
+            sql = ''' INSERT INTO quiz (title, charArray, qArray, optionArray) 
+            VALUES (?, ?, "", "")'''
+            cur.execute(sql, (title, charArray))
             con.commit()
         con.close()
 
