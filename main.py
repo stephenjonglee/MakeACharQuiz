@@ -106,7 +106,7 @@ def quiz_take():
         temp = opts[i].split(", ")
         options.append(temp)
 
-    return render_template("quizTake.html", title = "title", questions = questions, options = options, num = num, record = record, temp=temp)
+    return render_template("quizTake.html", title = "title", questions = questions, options = options, num = num)
 
 if __name__ == '__main__':
     app.run(debug=True)
