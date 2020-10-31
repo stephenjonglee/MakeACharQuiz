@@ -5,6 +5,8 @@ Description:
 Users can create their own "Which Character Are You Quiz".
 They can either choose to create their own quiz or play a quiz.
 
+Our project is saved under a Github repository: https://github.com/stephenjonglee/MakeACharQuiz
+
 How to Create a Quiz:
 User will be prompted to fill out forms to create a quiz.
 Quiz will have exactly 4 characters.
@@ -45,6 +47,20 @@ In order to create a new database, delete the quiz.db file and then run "python 
 A quiz.db file should be created.
 In order to start the project, type "python main.py" in the command prompt.
 Go to http://localhost:5000/ on your web browser and it should open the home page.
+
+Task Division:
+Tasks were divided up into three main parts:
+Front-end HTML Forms (creating a quiz) assigned to Jose Sanrindo
+Front-end HTML Templates (playing a quiz) assigned to Armando Lopez
+Back-end Python/Flask (connects and modifies the database) assigned to Stephen Lee
+
+Other tasks include making home page, testing the html files, testing python, and testing database.
+We use Trello to list our tasks and assignments: https://trello.com/b/xz9cHKUp/group-project-1
+
+Team Meetings:
+We used Discord to conduct our team meetings to go over our tasks done, what needs to be done,
+what needs to be modified, and what would be nice to include.
+We share screen to review our coding and testing together.
 
 File Directory: (type tree {folder path} \f in command prompt)
 │   db.py

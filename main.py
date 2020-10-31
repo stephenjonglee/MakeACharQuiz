@@ -28,7 +28,8 @@ def question_form():
 
                 # update last row
                 sql = ''' UPDATE quiz 
-                SET qArray = qArray || ?, optionArray = optionArray || ? 
+                SET qArray = qArray || ?, 
+                optionArray = optionArray || ? 
                 WHERE quizId = (SELECT MAX(quizId) FROM quiz)'''
                 cur.execute(sql, (question, optArray))
                 con.commit()
@@ -79,39 +80,33 @@ def quiz_result():
 # display quiz take
 @app.route('/quizTake.html')
 def quiz_take():
-    return render_template("quizTake.html")
 
-# # def getQuizDetails():
-# #     with sqlite3.connect('quiz.db') as conn:
-# #         cur = conn.cursor()
-# #         loggedIn = True
-# #         cur.execute("SELECT userId, firstName FROM users WHERE email = '" + session['email'] + "'")
-# #         userId, firstName = cur.fetchone()
-# #         cur.execute("SELECT count(productId) FROM kart WHERE userId = " + str(userId))
-# #         noOfItems = cur.fetchone()[0]
-# #     conn.close()
-# #     return (loggedIn, firstName, noOfItems)
+    # retrieve data from database
+    with sqlite3.connect('quiz.db') as con:
+        cur = con.cursor()
+        sql = ''' SELECT *
+        FROM quiz
+        WHERE quizId = (SELECT MAX(quizId) FROM quiz)'''
+        cur.execute(sql)
+        record = cur.fetchall()[0]
+    con.close()
 
-# @app.route("/registerationForm")
-# def registrationForm():
-#     return render_template("register.html")
+    title = record[1]
+    qArray = record[3]
+    optionArray = record[4]
 
-# def allowed_file(filename):
-#     return '.' in filename and \
-#             filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+    # data text needs to be parsed into an array
+    questions = qArray.split(" | ")
+    num = len(questions) - 1
+    # # split options in groups of 4
+    options = []
+    opts = optionArray.split(' | ')
+    temp = ""
+    for i in range(0, num):
+        temp = opts[i].split(", ")
+        options.append(temp)
 
-# def parse(data):
-#     ans = []
-#     i = 0
-#     while i < len(data):
-#         curr = []
-#         for j in range(7):
-#             if i >= len(data):
-#                 break
-#             curr.append(data[i])
-#             i += 1
-#         ans.append(curr)
-#     return ans
+    return render_template("quizTake.html", title = "title", questions = questions, options = options, num = num, record = record, temp=temp)
 
 if __name__ == '__main__':
     app.run(debug=True)
