@@ -1,0 +1,49 @@
+html{
+    height: 100%;
+}
+body{
+    background-image:linear-gradient(rgb(100, 100, 204),gray);
+    height:100%;
+    
+}
+.title{
+    text-align:center;
+    color:rgb(228, 44, 228);
+    text-shadow: 1.5px 1.5px #000000;
+    font-size:30px;
+    background-image: linear-gradient(purple,gray);
+    border-style: inset;
+}
+
+.column {
+    padding-top:20px;
+    float: left;
+    width: 33.33%;
+    text-align:center;
+  }
+.row{
+    padding-bottom:20px;
+}
+.start{
+    text-align:center;
+    color:rgb(165, 16, 16);
+    font-size:25px;
+    font-weight:bold;
+    text-shadow:1.5px 1.5px rgb(0, 0, 0)
+}
+
+button{
+    font-size:30px;
+    font-weight:bold;
+    color:rgb(0, 0, 0);
+    text-shadow: 1px 1px rgb(214, 7, 7);
+    background-color:rgb(128, 126, 126);
+
+}
+
+
+@media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+    }
+  }

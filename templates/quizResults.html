@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles/quizResults.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class = "title">
+        {{Title of Quiz}} Quiz Results
+     </div>
+
+     <div class = "header">
+         Based on your quiz answers, you are most like:
+     </div>
+     <div class = "img">
+        <img src=".jpg" alt="Insert image here.">
+     </div>
+     <div class = "character">
+         {{charName}}!
+     </div>
+
+     <div class = "buttons">
+     <button type="button" id = "take" onclick="window.location.href='https://youtube.com';"> Take Another Quiz?</button>
+                    
+     <button type="button" id = "create" onclick="window.location.href='question_form.html';"> Create Your Own!</button>
+    </div>
+    <script src="../js/quizResults.js"></script>
+</body>
+</html>

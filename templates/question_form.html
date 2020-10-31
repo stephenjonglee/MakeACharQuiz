@@ -18,7 +18,7 @@
         <div class="row">
             <div class="cols-sm-6">
                 <div class="panel panel-primary">
-                    <form>
+                    <form method="POST">
                         <div class="panel-heading">
                             <h1 class="panel-title">Question Form</h1>
                         </div>
@@ -33,28 +33,28 @@
                             <!--Prompt to add answer A-->
                             <div class="form-group">
                                 <label for="answerA">Input answer for Character A</label>
-                                <input class="form-control" name="responseA" id="answerA" value="" placeholder="Apples">
+                                <input class="form-control" name="optionA" id="answerA" value="" placeholder="Apples">
                             </div>
                             <!--Prompt to add answer B-->
                             <div class="form-group">
                                 <label for="answerB">Input answer for Character B</label>
-                                <input class="form-control" name="responseB" id="answerB" value=""
+                                <input class="form-control" name="optionB" id="answerB" value=""
                                     placeholder="Bananas">
                             </div>
                             <!--Prompt to add answer C-->
                             <div class="form-group">
                                 <label for="answerC">Input answer for Character C</label>
-                                <input class="form-control" name="responseA" id="answerA" value=""
+                                <input class="form-control" name="optionC" id="answerC" value=""
                                     placeholder="Oranges">
                             </div>
                             <!--Prompt to add answer D-->
                             <div class="form-group">
                                 <label for="answerD">Input answer for Character D</label>
-                                <input class="form-control" name="responseA" id="answerA" value="" placeholder="Mangos">
+                                <input class="form-control" name="optionD" id="answerD" value="" placeholder="Mangos">
                             </div>
                             <!---->
-                            <button type="submit" class="btn btn-default">Submit</button>
-                            <button type="submit" class="btn btn-default" onclick="window.location.href='homePage.html';">Submit & Complete</button>
+                            <button type="submit" name="submit_btn" value="nxt" class="btn btn-default" onclick="window.location.href='question_form.html';">Next Question</button>
+                            <button type="submit" name="submit_btn" value="done" class="btn btn-default" onclick="window.location.href='homePage.html';">Submit & Complete</button>
                         </div>
                     </form>
                     <!--End of Prompts-->

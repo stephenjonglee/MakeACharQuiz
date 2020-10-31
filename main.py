@@ -4,368 +4,160 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-def getQuizDetails():
-    with sqlite3.connect('quiz.db') as conn:
-        cur = conn.cursor()
-        loggedIn = True
-        cur.execute("SELECT userId, firstName FROM users WHERE email = '" + session['email'] + "'")
-        userId, firstName = cur.fetchone()
-        cur.execute("SELECT count(productId) FROM kart WHERE userId = " + str(userId))
-        noOfItems = cur.fetchone()[0]
-    conn.close()
-    return (loggedIn, firstName, noOfItems)
+# display home page
+@app.route('/')
+def home_page():
+    return render_template("homePage.html")
 
-@app.route("/")
-def root():
-    loggedIn, firstName, noOfItems = getLoginDetails()
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute('SELECT productId, name, price, description, image, stock FROM products')
-        itemData = cur.fetchall()
-        cur.execute('SELECT categoryId, name FROM categories')
-        categoryData = cur.fetchall()
-    itemData = parse(itemData)   
-    return render_template('home.html', itemData=itemData, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems, categoryData=categoryData)
-
-@app.route("/test")
-def test():
-    return render_template('welcome.html')
-
-@app.route("/test_login_page")
-def test_login():
-    return render_template('test_login_page.html')
-
-@app.route("/test_base")
-def test_base():
-    return render_template('base.html')
-
-@app.route("/add")
-def admin():
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT categoryId, name FROM categories")
-        categories = cur.fetchall()
-    conn.close()
-    return render_template('add.html', categories=categories)
-
-@app.route("/addItem", methods=["GET", "POST"])
-def addItem():
-    if request.method == "POST":
-        name = request.form['name']
-        price = float(request.form['price'])
-        description = request.form['description']
-        stock = int(request.form['stock'])
-        categoryId = int(request.form['category'])
-
-        #Uploading image procedure
-        image = request.files['image']
-        if image and allowed_file(image.filename):
-            filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        imagename = filename
-        with sqlite3.connect('database.db') as conn:
-            try:
-                cur = conn.cursor()
-                cur.execute('''INSERT INTO products (name, price, description, image, stock, categoryId) VALUES (?, ?, ?, ?, ?, ?)''', (name, price, description, imagename, stock, categoryId))
-                conn.commit()
-                msg="added successfully"
-            except:
-                msg="error occured"
-                conn.rollback()
-        conn.close()
-        print(msg)
-        return redirect(url_for('root'))
-
-@app.route("/remove")
-def remove():
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute('SELECT productId, name, price, description, image, stock FROM products')
-        data = cur.fetchall()
-    conn.close()
-    return render_template('remove.html', data=data)
-
-@app.route("/removeItem")
-def removeItem():
-    productId = request.args.get('productId')
-    with sqlite3.connect('database.db') as conn:
-        try:
-            cur = conn.cursor()
-            cur.execute('DELETE FROM products WHERE productID = ' + productId)
-            conn.commit()
-            msg = "Deleted successsfully"
-        except:
-            conn.rollback()
-            msg = "Error occured"
-    conn.close()
-    print(msg)
-    return redirect(url_for('root'))
-
-@app.route("/displayCategory")
-def displayCategory():
-        loggedIn, firstName, noOfItems = getLoginDetails()
-        categoryId = request.args.get("categoryId")
-        with sqlite3.connect('database.db') as conn:
-            cur = conn.cursor()
-            cur.execute("SELECT products.productId, products.name, products.price, products.image, categories.name FROM products, categories WHERE products.categoryId = categories.categoryId AND categories.categoryId = " + categoryId)
-            data = cur.fetchall()
-        conn.close()
-        categoryName = data[0][4]
-        data = parse(data)
-        return render_template('displayCategory.html', data=data, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems, categoryName=categoryName)
-
-@app.route("/account/profile")
-def profileHome():
-    if 'email' not in session:
-        return redirect(url_for('root'))
-    loggedIn, firstName, noOfItems = getLoginDetails()
-    return render_template("profileHome.html", loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
-
-@app.route("/account/profile/edit")
-def editProfile():
-    if 'email' not in session:
-        return redirect(url_for('root'))
-    loggedIn, firstName, noOfItems = getLoginDetails()
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT userId, email, firstName, lastName, address1, address2, zipcode, city, state, country, phone FROM users WHERE email = '" + session['email'] + "'")
-        profileData = cur.fetchone()
-    conn.close()
-    return render_template("editProfile.html", profileData=profileData, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
-
-@app.route("/account/profile/changePassword", methods=["GET", "POST"])
-def changePassword():
-    if 'email' not in session:
-        return redirect(url_for('loginForm'))
-    if request.method == "POST":
-        oldPassword = request.form['oldpassword']
-        oldPassword = hashlib.md5(oldPassword.encode()).hexdigest()
-        newPassword = request.form['newpassword']
-        newPassword = hashlib.md5(newPassword.encode()).hexdigest()
-        with sqlite3.connect('database.db') as conn:
-            cur = conn.cursor()
-            cur.execute("SELECT userId, password FROM users WHERE email = '" + session['email'] + "'")
-            userId, password = cur.fetchone()
-            if (password == oldPassword):
-                try:
-                    cur.execute("UPDATE users SET password = ? WHERE userId = ?", (newPassword, userId))
-                    conn.commit()
-                    msg="Changed successfully"
-                except:
-                    conn.rollback()
-                    msg = "Failed"
-                return render_template("changePassword.html", msg=msg)
-            else:
-                msg = "Wrong password"
-        conn.close()
-        return render_template("changePassword.html", msg=msg)
-    else:
-        return render_template("changePassword.html")
-
-@app.route("/updateProfile", methods=["GET", "POST"])
-def updateProfile():
+# display question form
+@app.route('/question_form.html', methods = ['GET', 'POST'])
+def question_form():
     if request.method == 'POST':
-        email = request.form['email']
-        firstName = request.form['firstName']
-        lastName = request.form['lastName']
-        address1 = request.form['address1']
-        address2 = request.form['address2']
-        zipcode = request.form['zipcode']
-        city = request.form['city']
-        state = request.form['state']
-        country = request.form['country']
-        phone = request.form['phone']
-        with sqlite3.connect('database.db') as con:
+        # if the next question button is clicked
+        if request.form['submit_btn'] == 'nxt':
+            #Parse form data    
+            question = request.form['question']
+            optionA = request.form['optionA']
+            optionB = request.form['optionB']
+            optionC = request.form['optionC']
+            optionD = request.form['optionD']
+
+            optArray = optionA + ", " + optionB + ", " + optionC + ", " + optionD
+
+            with sqlite3.connect('quiz.db') as con:
                 try:
                     cur = con.cursor()
-                    cur.execute('UPDATE users SET firstName = ?, lastName = ?, address1 = ?, address2 = ?, zipcode = ?, city = ?, state = ?, country = ?, phone = ? WHERE email = ?', (firstName, lastName, address1, address2, zipcode, city, state, country, phone, email))
+                    # retrieving data from last row
+                    sql = ''' SELECT qArray FROM quiz ORDER BY quizId DESC LIMIT 1 '''
+                    qArray = cur.execute(sql)
+                    sql = ''' SELECT optionArray FROM quiz ORDER BY quizId DESC LIMIT 1 '''
+                    optionArray = cur.execute(sql)
 
+                    # add question and options to arrays
+                    qArray = qArray + ", " + question
+                    optionArray = optionArray + ", " + optArray
+
+                    # update last row
+                    sql = ''' UPDATE quiz
+                        SET qArray = ?,
+                            optionArray = ?
+                        WHERE quizId = (SELECT MAX(quizID) FROM quiz)'''
+                    cur.execute(sql, (qArray, optionArray))
                     con.commit()
-                    msg = "Saved Successfully"
                 except:
                     con.rollback()
-                    msg = "Error occured"
-        con.close()
-        return redirect(url_for('editProfile'))
+            con.close()
 
-@app.route("/loginForm")
-def loginForm():
-    if 'email' in session:
-        return redirect(url_for('root'))
-    else:
-        return render_template('login.html', error='')
-
-@app.route("/login", methods = ['POST', 'GET'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        if is_valid(email, password):
-            session['email'] = email
-            return redirect(url_for('root'))
-        else:
-            error = 'Invalid UserId / Password'
-            return render_template('login.html', error=error)
-
-@app.route("/productDescription")
-def productDescription():
-    loggedIn, firstName, noOfItems = getLoginDetails()
-    productId = request.args.get('productId')
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute('SELECT productId, name, price, description, image, stock FROM products WHERE productId = ' + productId)
-        productData = cur.fetchone()
-    conn.close()
-    return render_template("productDescription.html", data=productData, loggedIn = loggedIn, firstName = firstName, noOfItems = noOfItems)
-
-@app.route("/addToCart")
-def addToCart():
-    if 'email' not in session:
-        return redirect(url_for('loginForm'))
-    else:
-        productId = int(request.args.get('productId'))
-        with sqlite3.connect('database.db') as conn:
-            cur = conn.cursor()
-            cur.execute("SELECT userId FROM users WHERE email = '" + session['email'] + "'")
-            userId = cur.fetchone()[0]
-            try:
-                cur.execute("INSERT INTO kart (userId, productId) VALUES (?, ?)", (userId, productId))
-                conn.commit()
-                msg = "Added successfully"
-            except:
-                conn.rollback()
-                msg = "Error occured"
-        conn.close()
-        return redirect(url_for('root'))
-
-@app.route("/cart")
-def cart():
-    if 'email' not in session:
-        return redirect(url_for('loginForm'))
-    loggedIn, firstName, noOfItems = getLoginDetails()
-    email = session['email']
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT userId FROM users WHERE email = '" + email + "'")
-        userId = cur.fetchone()[0]
-        cur.execute("SELECT products.productId, products.name, products.price, products.image FROM products, kart WHERE products.productId = kart.productId AND kart.userId = " + str(userId))
-        products = cur.fetchall()
-    totalPrice = 0
-    for row in products:
-        totalPrice += row[2]
-    return render_template("cart.html", products = products, totalPrice=totalPrice, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
-
-@app.route("/removeFromCart")
-def removeFromCart():
-    if 'email' not in session:
-        return redirect(url_for('loginForm'))
-    email = session['email']
-    productId = int(request.args.get('productId'))
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT userId FROM users WHERE email = '" + email + "'")
-        userId = cur.fetchone()[0]
-        try:
-            cur.execute("DELETE FROM kart WHERE userId = " + str(userId) + " AND productId = " + str(productId))
-            conn.commit()
-            msg = "removed successfully"
-        except:
-            conn.rollback()
-            msg = "error occured"
-    conn.close()
-    return redirect(url_for('root'))
-
-@app.route("/logout")
-def logout():
-    session.pop('email', None)
-    return redirect(url_for('root'))
-
-def is_valid(email, password):
-    con = sqlite3.connect('database.db')
-    cur = con.cursor()
-    cur.execute('SELECT email, password FROM users')
-    data = cur.fetchall()
-    for row in data:
-        if row[0] == email and row[1] == hashlib.md5(password.encode()).hexdigest():
-            return True
-    return False
-
-
-@app.route("/checkout", methods=['GET','POST'])
-def payment():
-    if 'email' not in session:
-        return redirect(url_for('loginForm'))
-    loggedIn, firstName, noOfItems = getLoginDetails()
-    email = session['email']
-
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT userId FROM users WHERE email = '" + email + "'")
-        userId = cur.fetchone()[0]
-        cur.execute("SELECT products.productId, products.name, products.price, products.image FROM products, kart WHERE products.productId = kart.productId AND kart.userId = " + str(userId))
-        products = cur.fetchall()
-    totalPrice = 0
-    for row in products:
-        totalPrice += row[2]
-        print(row)
-        cur.execute("INSERT INTO Orders (userId, productId) VALUES (?, ?)", (userId, row[0]))
-    cur.execute("DELETE FROM kart WHERE userId = " + str(userId))
-    conn.commit()
-
+            return redirect(url_for("question_form"))
         
+        # if the submit button is clicked
+        elif request.form['submit_btn'] == 'done':
+            #Parse form data    
+            question = request.form['question']
+            optionA = request.form['optionA']
+            optionB = request.form['optionB']
+            optionC = request.form['optionC']
+            optionD = request.form['optionD']
 
-    return render_template("checkout.html", products = products, totalPrice=totalPrice, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
+            optionArray = optionA + ", " + optionB + ", " + optionC + ", " + optionD
 
-@app.route("/register", methods = ['GET', 'POST'])
-def register():
+            with sqlite3.connect('quiz.db') as con:
+                try:
+                    cur = con.cursor()
+                    # retrieving data from last row
+                    sql = ''' SELECT qArray FROM quiz ORDER BY quizId DESC LIMIT 1 '''
+                    qArray = cur.execute(sql)
+                    sql = ''' SELECT optionArray FROM quiz ORDER BY quizId DESC LIMIT 1 '''
+                    optionArray = cur.execute(sql)
+
+                    # add question and options to arrays
+                    qArray = qArray + ", " + question
+                    optionArray = optionArray + ", " + optArray
+
+                    # update last row
+                    sql = ''' UPDATE quiz
+                        SET qArray = ?,
+                            optionArray = ?
+                        WHERE quizId = (SELECT MAX(quizID) FROM quiz)'''
+                    cur.execute(sql, (qArray, optionArray))
+                    con.commit()
+                except:
+                    con.rollback()
+            con.close()
+
+            return redirect(url_for("home_page"))    
+    
+    return render_template("question_form.html")
+
+# display quiz form
+@app.route('/quiz_form.html', methods = ['GET', 'POST'])
+def quiz_form():
     if request.method == 'POST':
-        #Parse form data    
-        password = request.form['password']
-        email = request.form['email']
-        firstName = request.form['firstName']
-        lastName = request.form['lastName']
-        address1 = request.form['address1']
-        address2 = request.form['address2']
-        zipcode = request.form['zipcode']
-        city = request.form['city']
-        state = request.form['state']
-        country = request.form['country']
-        phone = request.form['phone']
+        # Parse form data    
+        title = request.form['title']
+        charA = request.form['charA']
+        charB = request.form['charB']
+        charC = request.form['charC']
+        charD = request.form['charD']
 
-        with sqlite3.connect('database.db') as con:
-            try:
-                cur = con.cursor()
-                cur.execute('INSERT INTO users (password, email, firstName, lastName, address1, address2, zipcode, city, state, country, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (hashlib.md5(password.encode()).hexdigest(), email, firstName, lastName, address1, address2, zipcode, city, state, country, phone))
+        charArray = charA + ', ' + charB + ', ' + charC + ', ' + charD
+        
+        qArray = ''
+        optionArray = ''
 
-                con.commit()
-
-                msg = "Registered Successfully"
-            except:
-                con.rollback()
-                msg = "Error occured"
+        with sqlite3.connect('quiz.db') as con:
+            cur = con.cursor()
+            sql = ''' INSERT INTO quiz (title, charArray, qArray, optionArray)
+                VALUES (?, ?, ?, ?)'''
+            cur.execute(sql, (title, charArray, qArray, optionArray))
+            con.commit()
         con.close()
-        return render_template("login.html", error=msg)
 
-@app.route("/registerationForm")
-def registrationForm():
-    return render_template("register.html")
+        return redirect(url_for("question_form"))
 
-def allowed_file(filename):
-    return '.' in filename and \
-            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+    return render_template("quiz_form.html")
 
-def parse(data):
-    ans = []
-    i = 0
-    while i < len(data):
-        curr = []
-        for j in range(7):
-            if i >= len(data):
-                break
-            curr.append(data[i])
-            i += 1
-        ans.append(curr)
-    return ans
+# display quiz results
+@app.route('/quizResults.html')
+def quiz_result():
+    return render_template("quizResults.html")
+
+# display quiz take
+@app.route('/quizTake.html')
+def quiz_take():
+    return render_template("quizTake.html")
+
+# # def getQuizDetails():
+# #     with sqlite3.connect('quiz.db') as conn:
+# #         cur = conn.cursor()
+# #         loggedIn = True
+# #         cur.execute("SELECT userId, firstName FROM users WHERE email = '" + session['email'] + "'")
+# #         userId, firstName = cur.fetchone()
+# #         cur.execute("SELECT count(productId) FROM kart WHERE userId = " + str(userId))
+# #         noOfItems = cur.fetchone()[0]
+# #     conn.close()
+# #     return (loggedIn, firstName, noOfItems)
+
+# @app.route("/registerationForm")
+# def registrationForm():
+#     return render_template("register.html")
+
+# def allowed_file(filename):
+#     return '.' in filename and \
+#             filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+# def parse(data):
+#     ans = []
+#     i = 0
+#     while i < len(data):
+#         curr = []
+#         for j in range(7):
+#             if i >= len(data):
+#                 break
+#             curr.append(data[i])
+#             i += 1
+#         ans.append(curr)
+#     return ans
 
 if __name__ == '__main__':
-    app.run(host="192.168.0.24", debug=True)
+    app.run(debug=True)
