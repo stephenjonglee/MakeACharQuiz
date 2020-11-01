@@ -1,0 +1,61 @@
+/*whole html file*/
+html{
+    height: 100%;
+    width: 100%;
+}
+/*body including background image*/
+body{
+    background-image: url("../images/background.png");
+    background-color: white;
+}
+/*button*/
+button{
+    font-size:30px;
+    font-weight: bold;
+    color: black;
+    background-color: white;
+    border-radius: 50%;
+    border: 5px solid lightblue;
+}
+/* */
+.title{
+    text-align: center;
+    color: black;
+    font-size:30px;
+    background-color: white;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 10px solid lightblue;
+}
+
+
+/*starting prompt */
+.start{
+    text-align:center;
+    color: black;
+    font-size: 30px;
+    font-weight:bold;
+}
+
+
+
+
+.column {
+    padding-top:20px;
+    float: left;
+    width: 33.33%;
+    text-align:center;
+  }
+.row{
+    padding-bottom:20px;
+}
+
+
+
+/* */
+@media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+    }
+  }
