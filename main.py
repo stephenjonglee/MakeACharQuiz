@@ -118,8 +118,10 @@ def quiz_take():
             record = cur.fetchall()[0]
         con.close()
 
+        title = record[1]
         charArray = record[2]
         qArray = record[3]
+        optionArray = record[4]
 
         # data text needs to be parsed into an array
         questions = qArray.split(" | ")
@@ -131,7 +133,7 @@ def quiz_take():
 
         # parse form data
         # updates the tally
-        for i in range(0, num):
+        for i in range(0, int(num)):
             name = 'option' + str(i)
             option = request.form[name]
             if option == "0":
@@ -141,13 +143,13 @@ def quiz_take():
             elif option == "2":
                 tally[2] = tally[2] + 1
             elif option == "4":
-                tally[4] = tally[4] + 1
-        
+                tally[3] = tally[3] + 1
+
         # find largest tally and it's position
         max_value = max(tally)
         max_index = tally.index(max_value)
 
-        # get character from index
+        # get character
         character = characters[max_index]
 
         return redirect(url_for("quiz_result", pcharacter = character))
@@ -173,7 +175,7 @@ def quiz_take():
         # data text needs to be parsed into an array
         questions = qArray.split(" | ")
         num = len(questions) - 1
-        # # split options in groups of 4
+        # split options in groups of 4
         options = []
         opts = optionArray.split(' | ')
         temp = ""
@@ -181,14 +183,16 @@ def quiz_take():
             temp = opts[i].split(", ")
             options.append(temp)
 
-        return render_template("quizTake.html", title = title, questions = questions, options = options, num = num)
+        return render_template("quizTake.html", title = title, questions = questions, options = options, num = num, index = index, charArray = charArray)
 
 # display quiz results
 @app.route('/quizResults.html')
 def quiz_result():
     # get parameter
     character = request.args['pcharacter']
+
     return render_template("quizResults.html", character = character)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
