@@ -12,22 +12,28 @@
     </div>
 
     <br><br>
-    
-    {% for q in range(0, num) %} 
-    <div class = "questionFull">
-        <div id = "questionHeader">
-            {{ questions[q] }}
-        </div>
-        {% for option in options[q] %} 
-        <input type="radio" name="options" id="option1" value="option1"> {{ option }} </input>
-        {%endfor%}
-        <br><br>
-    </div>
-    {%endfor%}
-    
-    <br><br>
-    <button type="button" id = "submit" onclick="window.location.href='quizResults.html';">Submit Answers</button>
 
-    <script src="../js/quizTake.js"></script>
+    <form method="POST">
+        {% for i in range(0, num) %} 
+        <div class = "questionFull">
+            <div id = "questionHeader">
+                Question {{i+1}}: {{ questions[i] }}
+            </div>
+
+            <div id = "optionList">
+                <input type="radio" name="option{{i}}" id="option1" value="0"> {{ options[i][0] }} </input>
+                <input type="radio" name="option{{i}}" id="option1" value="1"> {{ options[i][1] }} </input>
+                <input type="radio" name="option{{i}}" id="option1" value="2"> {{ options[i][2] }} </input>
+                <input type="radio" name="option{{i}}" id="option1" value="3"> {{ options[i][3] }} </input>
+            </div>
+            
+            <br><br>
+        </div>
+        {%endfor%}
+        
+        <br><br>
+
+        <button type="button" id = "submit" onclick="window.location.href='quizResults.html';">Submit Answers</button>
+    </form>
 </body>
 </html>

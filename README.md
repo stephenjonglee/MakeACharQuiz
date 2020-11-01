@@ -10,7 +10,7 @@ Our project is saved under a Github repository: https://github.com/stephenjongle
 How to Create a Quiz:
 User will be prompted to fill out forms to create a quiz.
 Quiz will have exactly 4 characters.
-Quiz can have as many questions as the user desires.
+Quiz will have exactly 5 questions.
 Quiz will have exactly 4 options per question.
 
 How to Take a Quiz:
@@ -37,15 +37,15 @@ In order to view the database, you can use DB Browser.
 
 
 Installation Requirements:
-Flask
-Python
-sqlite3
-(optional) DB Browser
+Python or Python3
+Flask - to install type "pip install flask" in command prompt
+SQLite
+(optional) DB Browser if you want to look at the database
 
 How to Run the Project
 In order to create a new database, delete the quiz.db file and then run "python db.py" in the command prompt.
 A quiz.db file should be created.
-In order to start the project, type "python main.py" in the command prompt.
+In order to start the project, type "python main.py" in the command prompt or "python3 main.py" if you are using Python3.
 Go to http://localhost:5000/ on your web browser and it should open the home page.
 
 Task Division:

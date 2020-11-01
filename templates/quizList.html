@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles/quizTake.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class = "title">
+        Quiz List
+    </div>
+
+    <br><br>
+
+    <div class = "Description">
+        Click on a quiz to start
+    </div>
+    
+    <br><br>
+
+    <table>
+        <!-- Table Heading -->
+        <tr>
+          <th>Quiz Id</th>
+          <th>Quiz Title</th>
+        </tr>
+        
+        <!-- LIst of Quizzes -->
+        {% for i in range(0, num) %} 
+        <tr>
+          <td>{{i+1}}</td>
+          <td>
+            <form method="post">
+                <button type="submit" name="index" value={{i+1}} class="btn btn-default" onclick="window.location.href='quizTake.html';">{{quizzes[i]}}</button>
+            </form>
+          </td>
+        </tr>
+        {%endfor%}
+
+      </table>
+</body>
+</html>
