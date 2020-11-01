@@ -183,7 +183,7 @@ def quiz_take():
             temp = opts[i].split(", ")
             options.append(temp)
 
-        return render_template("quizTake.html", title = title, questions = questions, options = options, num = num, index = index, charArray = charArray)
+        return render_template("quizTake.html", title = title, questions = questions, options = options, num = num)
 
 # display quiz results
 @app.route('/quizResults.html')
