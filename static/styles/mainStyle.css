@@ -17,11 +17,12 @@ button{
     border-radius: 50%;
     border: 5px solid lightblue;
 }
+
 /* */
 .title{
     text-align: center;
     color: black;
-    font-size:30px;
+    font-size:45px;
     background-color: white;
     width: 50%;
     margin-left: auto;
@@ -51,6 +52,27 @@ button{
     padding-bottom:20px;
 }
 
+.column2 {
+    padding-top:20px;
+    float: left;
+    width: 50%;
+    text-align:center;
+    color:rgb(165, 16, 16);
+    font-size:25px;
+    font-weight:bold;
+    text-shadow:1.5px 1.5px rgb(0, 0, 0)
+}
+
+p {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size:20px;
+    font-weight:bold;
+    color: black;
+    border: 10px solid lightblue;
+    background-color: white;
+    height: 230px;
+}
+
 
 
 /* */
@@ -58,4 +80,4 @@ button{
     .column {
       width: 100%;
     }
-  }
+}
