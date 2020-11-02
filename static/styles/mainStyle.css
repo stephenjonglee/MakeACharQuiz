@@ -135,7 +135,8 @@ label, input, .btn, .listbody {
 
 .inputbtn {
     background: transparent;
-    color:rgb(255, 0, 212);
+    color:rgb(94, 231, 40);
+    border: none;
 }
 
 th {
@@ -146,6 +147,7 @@ th {
 
 td {
     border: 1px solid black;
+    text-align: center;
 }
 
 table {
