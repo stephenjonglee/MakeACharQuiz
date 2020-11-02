@@ -8,8 +8,18 @@ body{
     background-image: url("../images/background.png");
     background-color: white;
 }
+
 /*button*/
 button{
+    font-size:30px;
+    font-weight: bold;
+    color: black;
+    background-color: white;
+    border-radius: 50%;
+    border: 5px solid lightblue;
+}
+
+.myButton{
     font-size:30px;
     font-weight: bold;
     color: black;
@@ -29,6 +39,7 @@ button{
     margin-left: auto;
     margin-right: auto;
     border: 10px solid lightblue;
+    font-family: "Lucida Console", Monaco, monospace;
 }
 
 
@@ -58,7 +69,8 @@ button{
     color:rgb(94, 231, 40);
     font-size:25px;
     font-weight:bold;
-    text-shadow:1.5px 1.5px rgb(0, 0, 0)
+    text-shadow:1.5px 1.5px rgb(0, 0, 0);
+    padding-bottom: 70px;
 }
 
 p {
@@ -71,9 +83,106 @@ p {
     height: 250px;
 }
 
+.Description {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size:20px;
+    font-weight:bold;
+    color: black;
+    border: 10px solid lightblue;
+    background-color: white;
+    width:fit-content;
+    margin-left: auto;
+    margin-right:auto;
+}
+
 /* */
 @media screen and (max-width: 600px) {
     .column {
       width: 100%;
     }
+}
+
+.panel-title {
+    font-family: "Lucida Console", Monaco, monospace;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 30px;
+    border: 10px solid lightblue;
+}
+
+label, input, .btn, .listbody {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 20px;
+}
+
+.questionFull{
+
+    font-size:20px;
+    font-weight:bold;
+    color: black;
+    text-shadow: 1px 1px rgb(54, 53, 53);
+
+
+}
+
+#submit{
+    color:black;
+    font-weight:bold;
+    font-size:15px;
+    border-radius:15px;
+    background-color:rgb(212, 211, 211);
+}
+
+.inputbtn {
+    background: transparent;
+    color:rgb(255, 0, 212);
+}
+
+th {
+    color: white;
+    font-size: 25px;
+    border: 1px solid black;
+}
+
+td {
+    border: 1px solid black;
+}
+
+table {
+    color:rgb(94, 231, 40);
+    margin-left:auto;
+    margin-right:auto;
+    border: 1px solid black;
+}
+
+.questionHeader {
+    color: black;
+    font-size: 25px;
+    font-family: font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.optionList {
+    color: rgb(94, 231, 40);
+    font-size: 20px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.header{
+    padding-top:100px;
+    padding-bottom: 50px;
+    text-align:center;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size:30px;
+    font-weight:bold;
+    color:rgb(94, 231, 40);
+    text-shadow: 1px 1px rgb(0, 0, 0);
+}
+.character{
+    text-align:center;
+    font-weight:bold;
+    color:rgb(255, 0, 212);
+    text-shadow: 1px 1px rgb(0, 0, 0);
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size:50px;
+    padding-bottom: 100px;
 }

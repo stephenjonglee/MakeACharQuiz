@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/styles/mainStyle.css">
-    <link rel="stylesheet" href="../static/styles/quizTake.css">
-    <title>Document</title>
+    <title>Quiz List</title>
 </head>
-<body>
+<body class = "listbody">
     <div class = "title">
         Quiz List
     </div>
@@ -33,7 +32,7 @@
           <td>{{i+1}}</td>
           <td>
             <form method="post">
-                <button type="submit" name="index" value={{i+1}} class="btn btn-default">{{quizzes[i]}}</button>
+                <button class="inputbtn" type="submit" name="index" value={{i+1}}>{{quizzes[i]}}</button>
             </form>
           </td>
         </tr>

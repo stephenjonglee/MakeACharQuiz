@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/styles/quizTake.css">
     <link rel="stylesheet" href="../static/styles/mainStyle.css">
-    <title>Document</title>
+    <title>Quiz</title>
 </head>
 <body>
     <div class = "title">
@@ -17,11 +16,11 @@
     <form method="POST">
         {% for i in range(0, num) %} 
         <div class = "questionFull">
-            <div id = "questionHeader">
+            <div class = "questionHeader">
                 Question {{i+1}}: {{ questions[i] }}
             </div>
 
-            <div id = "optionList">
+            <div class = "optionList">
                 <input type="radio" name="option{{i}}" id="option1" value="0"> {{ options[i][0] }} </input>
                 <input type="radio" name="option{{i}}" id="option1" value="1"> {{ options[i][1] }} </input>
                 <input type="radio" name="option{{i}}" id="option1" value="2"> {{ options[i][2] }} </input>
