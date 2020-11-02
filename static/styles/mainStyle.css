@@ -16,6 +16,7 @@ button{
     background-color: white;
     border-radius: 50%;
     border: 5px solid lightblue;
+    margin-bottom: 100px;
 }
 
 /* */
@@ -39,9 +40,6 @@ button{
     font-weight:bold;
 }
 
-
-
-
 .column {
     padding-top:20px;
     float: left;
@@ -57,7 +55,7 @@ button{
     float: left;
     width: 50%;
     text-align:center;
-    color:rgb(165, 16, 16);
+    color:rgb(94, 231, 40);
     font-size:25px;
     font-weight:bold;
     text-shadow:1.5px 1.5px rgb(0, 0, 0)
@@ -70,10 +68,8 @@ p {
     color: black;
     border: 10px solid lightblue;
     background-color: white;
-    height: 230px;
+    height: 250px;
 }
-
-
 
 /* */
 @media screen and (max-width: 600px) {
