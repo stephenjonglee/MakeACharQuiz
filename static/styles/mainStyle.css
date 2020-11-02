@@ -188,3 +188,7 @@ table {
     font-size:50px;
     padding-bottom: 100px;
 }
+
+img {
+    border: 20px solid rgb(219, 212, 212);
+}

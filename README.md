@@ -10,7 +10,7 @@ Our project is saved under a Github repository: https://github.com/stephenjongle
 How to Create a Quiz:
 User will be prompted to fill out forms to create a quiz.
 Quiz will have exactly 4 characters.
-Quiz will have exactly 5 questions.
+Quiz will have as many questions as the user desires.
 Quiz will have exactly 4 options per question.
 
 How to Take a Quiz:
@@ -62,23 +62,26 @@ We used Discord to conduct our team meetings to go over our tasks done, what nee
 what needs to be modified, and what would be nice to include.
 We share screen to review our coding and testing together.
 
-File Directory: (type tree {folder path} \f in command prompt)
+File Directory: (type tree {folder path} /f in command prompt)
 │   db.py
 │   main.py
+│   quiz.db
 │   README.md
 │
 ├───static
 │   ├───images
-│   │       temp.jpg
+│   │       background.png
+│   │       quiz_create.PNG
+│   │       quiz_list.PNG
+│   │       quiz_take.PNG
 │   │
 │   └───styles
-│           homeStyles.css
-│           quizResults.css
-│           quizTake.css
+│           mainStyle.css
 │
 └───templates
         homePage.html
         question_form.html
+        quizList.html
         quizResults.html
         quizTake.html
         quiz_form.html
